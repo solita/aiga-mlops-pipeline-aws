@@ -120,6 +120,8 @@ Resources:
                   Resource:
                     - "arn:aws:s3:::jron-sku110k"
                     - "arn:aws:s3:::jron-sku110k/*"
+                    - "arn:aws:s3:::jron-lehtipiste"
+                    - "arn:aws:s3:::jron-lehtipiste/*"
 Outputs:
   PreprocessingStateMachineArn:
     Value: !Ref PreprocessingStateMachine
