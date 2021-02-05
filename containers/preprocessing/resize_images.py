@@ -1,12 +1,10 @@
 import os
 import PIL
 
-# specify target image size
+
 TARGET_IMAGE_SIZE = 832
 
-
 input_path = '/opt/ml/processing/input/images/'
-#output_path = '/opt/ml/processing/output/{}/'.format(str(TARGET_IMAGE_SIZE))
 output_path = '/opt/ml/processing/output/resized_images'
 
 
