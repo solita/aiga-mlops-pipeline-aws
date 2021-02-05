@@ -69,12 +69,7 @@
         "StoppingCondition": {
           "MaxRuntimeInSeconds": 10800
         },
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "ModelingSagemakerRole",
-            "Arn"
-          ]
-        },
+        "RoleArn": "${SagemakerRoleArn}",
         "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"
       }
     },

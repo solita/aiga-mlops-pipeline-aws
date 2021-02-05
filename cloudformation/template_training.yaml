@@ -12,12 +12,12 @@ Resources:
           Value: "2021-12-31"
         - Key: "Schedule"
           Value: "Daily"
-      RoleArn: !GetAtt 
-        - ModelingStepFunctionsWorkflowExecutionRole
-        - Arn
+      RoleArn: !GetAtt ModelingStepFunctionsWorkflowExecutionRole.Arn
       DefinitionS3Location:
         Bucket: !Sub jron-lehtipiste
         Key: 'preprocessing-statemachine.json'
+      DefinitionSubstitutions:
+        SagemakerRoleArn: !GetAtt ModelingSagemakerRole.Arn
   ModelingStepFunctionsWorkflowExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
