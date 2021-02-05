@@ -118,10 +118,8 @@ Resources:
                     - "s3:PutObject"
                     - "s3:ListBucket"
                   Resource:
-                    - !Sub "arn:aws:s3:::va-risk-ranking-${AWS::Region}-${AWS::AccountId}"
-                    - !Sub "arn:aws:s3:::va-risk-ranking-${AWS::Region}-${AWS::AccountId}/*"
-                    - !Sub "arn:aws:s3:::va-risk-ranking-codes-${AWS::Region}-${AWS::AccountId}"
-                    - !Sub "arn:aws:s3:::va-risk-ranking-codes-${AWS::Region}-${AWS::AccountId}/*"
+                    - "arn:aws:s3:::jron-sku110k"
+                    - "arn:aws:s3:::jron-sku110k/*"
 Outputs:
   PreprocessingStateMachineArn:
     Value: !Ref PreprocessingStateMachine
