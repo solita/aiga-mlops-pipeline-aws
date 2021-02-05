@@ -1,74 +1,11 @@
 {
-  "Comment": "Training state machine",
-  "StartAt": "Training",
+  "Comment": "Preprocessing state machine",
+  "StartAt": "Resize images",
   "TimeoutSeconds": 3600,
   "States": {
-    "Preprocessing": {
-      "Type": "Task",
-      "Next": "Training",
-      "Resource": "arn:aws:states:::sagemaker:createProcessingJob.sync",
-      "Parameters": {
-        "ProcessingResources": {
-          "ClusterConfig": {
-            "InstanceCount": 1,
-            "InstanceType": "ml.m5.xlarge",
-            "VolumeSizeInGB": 15
-          }
-        },
-        "ProcessingInputs": [
-            {
-                "InputName": "data",
-                "S3Input": {
-                    "S3Uri": "s3://jron-sku110k/images/",
-                    "LocalPath": "/opt/ml/processing/input/images",
-                    "S3DataType": "S3Prefix",
-                    "S3InputMode": "File",
-                    "S3DataDistributionType": "FullyReplicated",
-                    "S3CompressionType": "None"
-                }
-            },
-            {
-                "InputName": "code",
-                "S3Input": {
-                    "S3Uri": "s3://jron-lehtipiste/resize_images.py",
-                    "LocalPath": "/opt/ml/processing/input/code",
-                    "S3DataType": "S3Prefix",
-                    "S3InputMode": "File",
-                    "S3DataDistributionType": "FullyReplicated",
-                    "S3CompressionType": "None"
-                }
-            }
-        ],
-        "ProcessingOutputConfig": {
-            "Outputs": [
-                {
-                    "OutputName": "output_data",
-                    "S3Output": {
-                        "S3Uri": "s3://jron-lehtipiste/images/",
-                        "LocalPath": "/opt/ml/processing/output/resized_images",
-                        "S3UploadMode": "EndOfJob"
-                    }
-                }
-            ]
-        },
-        "AppSpecification": {
-            "ImageUri": "737474898029.dkr.ecr.sa-east-1.amazonaws.com/sagemaker-scikit-learn:0.20.0-cpu-py3",
-            "ContainerEntrypoint": [
-                "python3",
-                "/opt/ml/processing/input/code/transform.py"
-            ]
-        },
-        "StoppingCondition": {
-            "MaxRuntimeInSeconds": 300
-        },
-        "RoleArn": "arn:aws:iam::1234567890:role/SageMakerAPIExecutionRole-AIDACKCEVSQ6C2EXAMPLE",
-        "ProcessingJobName.$": "$$.Execution.Name"
-      }
-    },
-    "Training": {
+    "Resize images": {
       "Type": "Task",
       "Next": "SuccessState",
-      "ResultPath": null,
       "Catch": [
         {
           "ErrorEquals": [
@@ -82,61 +19,27 @@
         "ProcessingResources": {
           "ClusterConfig": {
             "InstanceCount": 1,
-            "InstanceType": "ml.c5.xlarge",
-            "VolumeSizeInGB": 10
+            "InstanceType": "ml.m5.xlarge",
+            "VolumeSizeInGB": 15
           }
-        },
-        "NetworkConfig": {
-          "EnableInterContainerTrafficEncryption": "True",
-          "EnableNetworkIsolation": "False"
-        },
-        "AppSpecification": {
-          "ImageUri.$": "$.execution_params.modelling_xgb_image_uri",
-          "ContainerArguments.$": "States.Array('--frontline', $.frontline, '--eq_type', $.type, '--num_rounds', '100', '--part_dep', 'yes', '--date_lowerbound', $.model_params.date_lowerbound, '--date_upperbound', $.model_params.date_upperbound )",
-          "ContainerEntrypoint": [
-            "python3",
-            "/opt/ml/processing/input/code/xgb_modeling.py"
-          ]
         },
         "ProcessingInputs": [
           {
-            "InputName": "code",
+            "InputName": "Data",
             "S3Input": {
-              "S3Uri.$": "States.Format('s3://{}/va-riskranking-model-training-pipeline/containers/va-risk-ranking-xgb-modeling/xgb_modeling.py', $.execution_params.source_code_s3_bucket)",
+              "S3Uri": "s3://jron-sku110k/images/",
+              "LocalPath": "/opt/ml/processing/input/images",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3DataDistributionType": "FullyReplicated",
+              "S3CompressionType": "None"
+            }
+          },
+          {
+            "InputName": "Code",
+            "S3Input": {
+              "S3Uri": "s3://jron-lehtipiste/resize_images.py",
               "LocalPath": "/opt/ml/processing/input/code",
-              "S3DataType": "S3Prefix",
-              "S3InputMode": "File",
-              "S3DataDistributionType": "FullyReplicated",
-              "S3CompressionType": "None"
-            }
-          },
-          {
-            "InputName": "configuration_files",
-            "S3Input": {
-              "S3Uri.$": "States.Format('s3://{}/configurations', $.execution_params.data_s3_bucket)",
-              "LocalPath": "/opt/ml/processing/input/configurations",
-              "S3DataType": "S3Prefix",
-              "S3InputMode": "File",
-              "S3DataDistributionType": "FullyReplicated",
-              "S3CompressionType": "None"
-            }
-          },
-          {
-            "InputName": "parameters",
-            "S3Input": {
-              "S3Uri.$": "States.Format('s3://{}/models/{}/tuning', $.execution_params.data_s3_bucket, $.frontline)",
-              "LocalPath.$": "States.Format('/opt/ml/processing/input/models/{}/eval_results', $.frontline)",
-              "S3DataType": "S3Prefix",
-              "S3InputMode": "File",
-              "S3DataDistributionType": "FullyReplicated",
-              "S3CompressionType": "None"
-            }
-          },
-          {
-            "InputName": "data",
-            "S3Input": {
-              "S3Uri.$": "States.Format('s3://{}/data/modeling/{}_{}_mdl_data.csv', $.execution_params.data_s3_bucket, $.frontline, $.type)",
-              "LocalPath.$": "States.Format('/opt/ml/processing/input/data/{}', $.frontline)",
               "S3DataType": "S3Prefix",
               "S3InputMode": "File",
               "S3DataDistributionType": "FullyReplicated",
@@ -147,20 +50,32 @@
         "ProcessingOutputConfig": {
           "Outputs": [
             {
-              "OutputName": "model_files",
+              "OutputName": "Output data",
               "S3Output": {
-                "S3Uri.$": "States.Format('s3://{}/models/{}/training', $.execution_params.data_s3_bucket, $.frontline)",
-                "LocalPath": "/opt/ml/processing/output/",
+                "S3Uri": "s3://jron-lehtipiste/resized_images/",
+                "LocalPath": "/opt/ml/processing/output/resized_images",
                 "S3UploadMode": "EndOfJob"
               }
             }
           ]
         },
-        "StoppingCondition": {
-          "MaxRuntimeInSeconds": 1200
+        "AppSpecification": {
+          "ImageUri": "799052614850.dkr.ecr.eu-west-1.amazonaws.com/jron-aiga-pipeline-preprocessing:latest",
+          "ContainerEntrypoint": [
+            "python3",
+            "/resize_images.py"
+          ]
         },
-        "RoleArn.$": "$.execution_params.sagemaker_execution_role_arn",
-        "ProcessingJobName.$": "States.Format('TRAINING-{}',$$.Execution.Name)"
+        "StoppingCondition": {
+          "MaxRuntimeInSeconds": 10800
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "ModelingSagemakerRole",
+            "Arn"
+          ]
+        },
+        "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"
       }
     },
     "SuccessState": {

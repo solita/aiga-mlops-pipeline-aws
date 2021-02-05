@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: "Pipeline resources."
 Resources:
-  TrainingStateMachine:
+  PreprocessingStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName: jron-lehtipiste-training-statemachine
+      StateMachineName: jron-lehtipiste-preprocessing-statemachine
       Tags: 
         - Key: "Owner"
           Value: "Joel Rontynen"
@@ -17,11 +17,11 @@ Resources:
         - Arn
       DefinitionS3Location:
         Bucket: !Sub jron-lehtipiste
-        Key: 'training-statemachine.json'
+        Key: 'preprocessing-statemachine.json'
   ModelingStepFunctionsWorkflowExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: jron-lehtipiste-training-stepfunctions-role
+      RoleName: jron-lehtipiste-modeling-stepfunctions-role
       Tags: 
         - Key: "Owner"
           Value: "Joel Rontynen"
@@ -38,31 +38,6 @@ Resources:
             Action: 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: StepFunctionsAccessPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "cloudwatch:PutMetricData"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                  - "logs:CreateLogGroup"
-                  - "logs:DescribeLogStreams"
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - 'events:PutTargets'
-                  - 'events:PutRule'
-                  - 'events:DescribeRule'
-                Resource:
-                  - !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForStepFunctionsExecutionRule
-              - Effect: "Allow"
-                Action:
-                  - "states:StartExecution"
-                Resource: 
-                  - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:*'
         - PolicyName: SagemakerAccessPolicy
           PolicyDocument:
             Version: 2012-10-17
@@ -148,8 +123,8 @@ Resources:
                     - !Sub "arn:aws:s3:::va-risk-ranking-codes-${AWS::Region}-${AWS::AccountId}"
                     - !Sub "arn:aws:s3:::va-risk-ranking-codes-${AWS::Region}-${AWS::AccountId}/*"
 Outputs:
-  TrainingStateMachineArn:
-    Value: !Ref TrainingStateMachine
+  PreprocessingStateMachineArn:
+    Value: !Ref PreprocessingStateMachine
   ModelingStepFunctionsWorkflowExecutionRole:
     Value: !Ref  ModelingStepFunctionsWorkflowExecutionRole
   ModelingSagemakerRole:
