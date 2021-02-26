@@ -1,0 +1,83 @@
+{
+  "Comment": "Training state machine",
+  "StartAt": "Training",
+  "TimeoutSeconds": 3600,
+  "States": {
+    "Training": {
+      "Type": "Task",
+      "Next": "SuccessState",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "FailState"
+        }
+      ],
+      "Resource": "arn:aws:states:::sagemaker:createProcessingJob.sync",
+      "Parameters": {
+        "ProcessingResources": {
+          "ClusterConfig": {
+            "InstanceCount": 1,
+            "InstanceType": "ml.m5.xlarge",
+            "VolumeSizeInGB": 10
+          }
+        },
+        "ProcessingInputs": [
+          {
+            "InputName": "Data",
+            "S3Input": {
+              "S3Uri": "s3://jron-sku110k/test/",
+              "LocalPath": "/opt/ml/processing/input/images",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3DataDistributionType": "ShardedByS3Key",
+              "S3CompressionType": "None"
+            }
+          },
+          {
+            "InputName": "Code",
+            "S3Input": {
+              "S3Uri": "s3://jron-lehtipiste/resize_images.py",
+              "LocalPath": "/opt/ml/processing/input/code",
+              "S3DataType": "S3Prefix",
+              "S3InputMode": "File",
+              "S3DataDistributionType": "FullyReplicated",
+              "S3CompressionType": "None"
+            }
+          }
+        ],
+        "ProcessingOutputConfig": {
+          "Outputs": [
+            {
+              "OutputName": "Output data",
+              "S3Output": {
+                "S3Uri": "s3://jron-lehtipiste/resized_images/",
+                "LocalPath": "/opt/ml/processing/output/resized_images",
+                "S3UploadMode": "EndOfJob"
+              }
+            }
+          ]
+        },
+        "AppSpecification": {
+          "ImageUri": "799052614850.dkr.ecr.eu-west-1.amazonaws.com/jron-aiga-pipeline-preprocessing:latest",
+          "ContainerEntrypoint": [
+            "python3",
+            "/resize_images.py"
+          ]
+        },
+        "StoppingCondition": {
+          "MaxRuntimeInSeconds": 10800
+        },
+        "RoleArn": "${SagemakerRoleArn}",
+        "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"
+      }
+    },
+    "SuccessState": {
+      "Type": "Succeed"
+    },
+    "FailState": {
+      "Type": "Fail"
+    }
+  }
+}

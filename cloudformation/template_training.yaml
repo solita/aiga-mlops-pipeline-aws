@@ -1,41 +1,41 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: "Pipeline resources."
+Description: Pipeline resources.
 Resources:
-  PreprocessingStateMachine:
-    Type: 'AWS::StepFunctions::StateMachine'
+  TrainingStateMachine:
+    Type: AWS::StepFunctions::StateMachine
     Properties:
-      StateMachineName: jron-lehtipiste-preprocessing-statemachine
+      StateMachineName: aiga-sku110k-training-statemachine
       Tags: 
-        - Key: "Owner"
-          Value: "Joel Rontynen"
-        - Key: "Duedate"
-          Value: "2021-12-31"
-        - Key: "Schedule"
-          Value: "Daily"
+        - Key: Owner
+          Value: Joel Rontynen
+        - Key: Duedate
+          Value: 2021-12-31
+        - Key: Schedule
+          Value: Daily
       RoleArn: !GetAtt ModelingStepFunctionsWorkflowExecutionRole.Arn
       DefinitionS3Location:
         Bucket: !Sub jron-lehtipiste
-        Key: 'preprocessing-statemachine.json'
+        Key: preprocessing-statemachine.json
       DefinitionSubstitutions:
         SagemakerRoleArn: !GetAtt ModelingSagemakerRole.Arn
   ModelingStepFunctionsWorkflowExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: jron-lehtipiste-modeling-stepfunctions-role
+      RoleName: aiga-modeling-stepfunctions-role
       Tags: 
-        - Key: "Owner"
-          Value: "Joel Rontynen"
-        - Key: "Duedate"
-          Value: "2021-12-31"
-        - Key: "Schedule"
-          Value: "Daily"
+        - Key: Owner
+          Value: Joel Rontynen
+        - Key: Duedate
+          Value: 2021-12-31
+        - Key: Schedule
+          Value: Daily
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: states.amazonaws.com
-            Action: 'sts:AssumeRole'
+            Action: sts:AssumeRole
       Path: /
       Policies:
         - PolicyName: SagemakerAccessPolicy
@@ -44,20 +44,20 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - 'sagemaker:AddTags'
-                  - 'sagemaker:CreateProcessingJob'
+                  - sagemaker:AddTags
+                  - sagemaker:CreateProcessingJob
                 Resource:
                   - '*'
               - Effect: Allow
                 Action:
-                  - 'events:PutTargets'
-                  - 'events:PutRule'
-                  - 'events:DescribeRule'
+                  - events:PutTargets
+                  - events:PutRule
+                  - events:DescribeRule
                 Resource:
                   - !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventsForSageMakerProcessingJobsRule
-              - Effect: "Allow"
+              - Effect: Allow
                 Action:
-                  - "iam:PassRole"
+                  - iam:PassRole
                 Resource: "*"
                 Condition:
                   StringEquals:
@@ -65,14 +65,14 @@ Resources:
   ModelingSagemakerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: jron-lehtipiste-modeling-sagemaker-role
+      RoleName: aiga-modeling-sagemaker-role
       Tags: 
-        - Key: "Owner"
-          Value: "Joel Rontynen"
-        - Key: "Duedate"
-          Value: "2021-12-31"
-        - Key: "Schedule"
-          Value: "Daily"
+        - Key: Owner
+          Value: Joel Rontynen
+        - Key: Duedate
+          Value: 2021-12-31
+        - Key: Schedule
+          Value: Daily
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
