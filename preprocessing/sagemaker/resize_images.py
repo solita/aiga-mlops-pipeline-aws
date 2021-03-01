@@ -5,7 +5,7 @@ from PIL import Image
 TARGET_IMAGE_SIZE = 832
 
 input_path = '/opt/ml/processing/input/images/'
-output_path = '/opt/ml/processing/output/resized_images'
+output_path = '/opt/ml/processing/output/resized_images/'
 
 
 num_processed = 0
