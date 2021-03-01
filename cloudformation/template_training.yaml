@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Pipeline resources.
+Description: Training pipeline resources.
 Resources:
-  TrainingStateMachine:
+  PreprocessingStateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
-      StateMachineName: aiga-sku110k-training-statemachine
+      StateMachineName: aiga-sku110k-preprocessing-statemachine
       Tags: 
         - Key: Owner
           Value: Joel Rontynen

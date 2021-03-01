@@ -1,5 +1,5 @@
 import os
-import PIL
+from PIL import Image
 
 
 TARGET_IMAGE_SIZE = 832
@@ -8,9 +8,7 @@ input_path = '/opt/ml/processing/input/images/'
 output_path = '/opt/ml/processing/output/resized_images'
 
 
-# counts number of processed images
 num_processed = 0
-
 image_names = os.listdir(input_path)
 for name in image_names:
     
@@ -27,9 +25,9 @@ for name in image_names:
         # display progress
         num_processed += 1
         if num_processed%50 == 0:
-          print('processed {} out of {} images'.format(num_processed, len(image_names)))
+          print('Processed {} out of {} images'.format(num_processed, len(image_names)))
 
     except:
-        pass
+        print("Processing failed for:", name)
 
-print('processed {} out of {} images'.format(num_processed, len(image_names)))
+print('Processed {} out of {} images'.format(num_processed, len(image_names)))
