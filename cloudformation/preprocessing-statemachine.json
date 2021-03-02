@@ -52,7 +52,7 @@
             {
               "OutputName": "Output data",
               "S3Output": {
-                "S3Uri": "s3://jron-lehtipiste/resized_images/",
+                "S3Uri": "s3://jron-lehtipiste/sku110k-resized",
                 "LocalPath": "/opt/ml/processing/output/resized_images",
                 "S3UploadMode": "EndOfJob"
               }
