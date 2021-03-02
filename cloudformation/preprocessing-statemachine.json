@@ -20,7 +20,7 @@
           "ClusterConfig": {
             "InstanceCount": 3,
             "InstanceType": "ml.c5.2xlarge",
-            "VolumeSizeInGB": 10
+            "VolumeSizeInGB": 1
           }
         },
         "ProcessingInputs": [
@@ -67,7 +67,7 @@
           ]
         },
         "StoppingCondition": {
-          "MaxRuntimeInSeconds": 10800
+          "MaxRuntimeInSeconds": 3600
         },
         "RoleArn": "${SagemakerRoleArn}",
         "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"

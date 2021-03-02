@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 
-TARGET_IMAGE_SIZE = 832
+TARGET_IMAGE_SIZE = 416
 
 input_path = '/opt/ml/processing/input/images/'
 output_path = '/opt/ml/processing/output/resized_images/'
@@ -17,7 +17,7 @@ for name in image_names:
         orig_image = Image.open(input_path + name)
 
         # resize image to target resolution
-        resized_image = orig_image.resize((TARGET_IMAGE_SIZE, TARGET_IMAGE_SIZE), PIL.Image.ANTIALIAS)
+        resized_image = orig_image.resize((TARGET_IMAGE_SIZE, TARGET_IMAGE_SIZE), Image.ANTIALIAS)
 
         # save image
         resized_image.save(output_path + name)
