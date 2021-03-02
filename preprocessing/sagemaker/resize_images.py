@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 
-TARGET_IMAGE_SIZE = 416
+TARGET_IMAGE_SIZE = 832
 
 input_path = '/opt/ml/processing/input/images/'
 output_path = '/opt/ml/processing/output/resized_images/{}/images/'.format(TARGET_IMAGE_SIZE)
@@ -31,6 +31,6 @@ for name in image_names:
           print('Processed {} out of {} images'.format(num_processed, len(image_names)))
 
     except OSError as e:
-        print("Processing failed for:", name + '.', e)
+        print("Processing failed for the file", name + ':', e)
 
 print('Processed {} out of {} images'.format(num_processed, len(image_names)))

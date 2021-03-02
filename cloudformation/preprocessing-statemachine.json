@@ -20,7 +20,7 @@
           "ClusterConfig": {
             "InstanceCount": 3,
             "InstanceType": "ml.c5.2xlarge",
-            "VolumeSizeInGB": 1
+            "VolumeSizeInGB": 2
           }
         },
         "ProcessingInputs": [
@@ -67,9 +67,9 @@
           ]
         },
         "StoppingCondition": {
-          "MaxRuntimeInSeconds": 3600
+          "MaxRuntimeInSeconds": 10800
         },
-        "RoleArn": "${SagemakerRoleArn}",
+        "RoleArn": "arn:aws:iam::799052614850:role/aiga-modeling-sagemaker-role",
         "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"
       }
     },
