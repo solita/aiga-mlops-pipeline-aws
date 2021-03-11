@@ -15,7 +15,8 @@ columns = ['file_name', 'x1', 'y1', 'x2', 'y2', 'class', 'image_width', 'image_h
 
 for group in ['train', 'val', 'test']:
 
-    with open(input_path + "annotations_" + group + ".csv", 'r', newline='') as csvfile:
+    input_file = "annotations_" + group + ".csv"
+    with open(os.path.join(input_path, input_file), 'r', newline='') as csvfile:
 
         data = csv.DictReader(csvfile, fieldnames=columns)
 

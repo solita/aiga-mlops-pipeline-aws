@@ -20,7 +20,7 @@
           "ClusterConfig": {
             "InstanceCount": 3,
             "InstanceType": "ml.c5.2xlarge",
-            "VolumeSizeInGB": 2
+            "VolumeSizeInGB": 1
           }
         },
         "ProcessingInputs": [
