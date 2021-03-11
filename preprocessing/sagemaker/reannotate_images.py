@@ -1,7 +1,3 @@
-import boto3
-from botocore.exceptions import ClientError
-from PIL import Image
-import pandas as pd
 import os
 
 
@@ -9,6 +5,9 @@ TARGET_IMAGE_SIZE = 832
 
 input_path = '/opt/ml/processing/input/'
 output_path = '/opt/ml/processing/output/resized_images/{}/annotations/'.format(TARGET_IMAGE_SIZE)
+
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
 
 
 columns = ['file_name', 'x1', 'y1', 'x2', 'y2', 'class', 'image_width', 'image_height']
