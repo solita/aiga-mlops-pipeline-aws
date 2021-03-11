@@ -14,7 +14,7 @@ columns = ['file_name', 'x1', 'y1', 'x2', 'y2', 'class', 'image_width', 'image_h
 
 for group in ['train', 'val', 'test']:
 
-    with open("annotations_" + group + ".csv", 'r') as csvfile:
+    with open(input_path + "annotations_" + group + ".csv", 'r') as csvfile:
 
         data = csv.DictReader(csvfile, field_names=columns, newline='')
 
@@ -34,5 +34,5 @@ for group in ['train', 'val', 'test']:
 
             image_name, _ = os.path.splitext(row['file_name'])
 
-            with open(image_name + '.txt', 'a') as output_file:
+            with open(output_path + image_name + '.txt', 'a') as output_file:
                 output_file.write(output_row)
