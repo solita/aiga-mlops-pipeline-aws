@@ -1,4 +1,5 @@
 import os
+import csv
 
 
 TARGET_IMAGE_SIZE = 832
@@ -14,9 +15,9 @@ columns = ['file_name', 'x1', 'y1', 'x2', 'y2', 'class', 'image_width', 'image_h
 
 for group in ['train', 'val', 'test']:
 
-    with open(input_path + "annotations_" + group + ".csv", 'r') as csvfile:
+    with open(input_path + "annotations_" + group + ".csv", 'r', newline='') as csvfile:
 
-        data = csv.DictReader(csvfile, field_names=columns, newline='')
+        data = csv.DictReader(csvfile, fieldnames=columns)
 
         for row in data:
 
@@ -25,14 +26,15 @@ for group in ['train', 'val', 'test']:
             obj_width = int(row['x2']) - int(row['x1'])
             obj_height = int(row['y2']) - int(row['y1'])
 
-            x = x_center / int(row['image_width'])
-            y = y_center / int(row['image_height'])
-            w = obj_width / int(row['image_width'])
-            h = obj_height / int(row['image_height'])
+            x = round(x_center / int(row['image_width']), 8)
+            y = round(y_center / int(row['image_height']), 8)
+            w = round(obj_width / int(row['image_width']), 8)
+            h = round(obj_height / int(row['image_height']), 8)
 
-            output_row = f'0 {round(x, 8)} {round(y, 8)} {round(w, 8)} {round(h, 8)}\n'
+            output_row = f'0 {x} {y} {w} {h}\n'
 
             image_name, _ = os.path.splitext(row['file_name'])
+            file_name = image_name + '.txt'
 
-            with open(output_path + image_name + '.txt', 'a') as output_file:
+            with open(os.path.join(output_path, file_name), 'a') as output_file:
                 output_file.write(output_row)
