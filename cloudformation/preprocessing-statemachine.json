@@ -98,7 +98,7 @@
             "InputName": "Data",
             "S3Input": {
               "S3Uri": "s3://jron-sku110k/annotations/",
-              "LocalPath": "/opt/ml/processing/input/",
+              "LocalPath": "/opt/ml/processing/input/annotations/",
               "S3DataType": "S3Prefix",
               "S3InputMode": "File",
               "S3DataDistributionType": "FullyReplicated",

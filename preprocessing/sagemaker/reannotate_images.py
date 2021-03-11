@@ -4,8 +4,8 @@ import csv
 
 TARGET_IMAGE_SIZE = 832
 
-input_path = '/opt/ml/processing/input/'
-output_path = '/opt/ml/processing/output/resized_images/{}/annotations/'.format(TARGET_IMAGE_SIZE)
+input_path = '/opt/ml/processing/input/annotations/'
+output_path = '/opt/ml/processing/output/{}/annotations/'.format(TARGET_IMAGE_SIZE)
 
 if not os.path.exists(output_path):
     os.makedirs(output_path)
@@ -34,7 +34,7 @@ for group in ['train', 'val', 'test']:
             output_row = f'0 {x} {y} {w} {h}\n'
 
             image_name, _ = os.path.splitext(row['file_name'])
-            file_name = image_name + '.txt'
+            output_file = image_name + '.txt'
 
-            with open(os.path.join(output_path, file_name), 'a') as output_file:
+            with open(os.path.join(output_path, output_file), 'a') as output_file:
                 output_file.write(output_row)
