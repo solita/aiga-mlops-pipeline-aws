@@ -70,7 +70,7 @@
           "MaxRuntimeInSeconds": 10800
         },
         "RoleArn": "arn:aws:iam::799052614850:role/aiga-modeling-sagemaker-role",
-        "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"
+        "ProcessingJobName.$": "States.Format('RESIZE-{}', $$.Execution.Name)"
       }
     },
     "Reannotate images": {
@@ -140,7 +140,7 @@
           "MaxRuntimeInSeconds": 10800
         },
         "RoleArn": "arn:aws:iam::799052614850:role/aiga-modeling-sagemaker-role",
-        "ProcessingJobName.$": "States.Format('PREPROCESSING-{}', $$.Execution.Name)"
+        "ProcessingJobName.$": "States.Format('REANNOTATE-{}', $$.Execution.Name)"
       }
     },
     "SuccessState": {

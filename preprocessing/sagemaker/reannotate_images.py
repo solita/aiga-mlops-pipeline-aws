@@ -17,19 +17,19 @@ for group in ['train', 'val', 'test']:
 
     with open("annotations_" + group + ".csv", 'r') as csvfile:
 
-        data = csv.DictReader(csvfile, field_names=columns)
+        data = csv.DictReader(csvfile, field_names=columns, newline='')
 
         for row in data:
 
-            x_center = row['x1'] + row['x2'] / 2.0
-            y_center = row['y1'] + row['y2'] / 2.0
-            obj_width = row['x2'] - row['x1']
-            obj_height = row['y2'] - row['y1']
+            x_center = int(row['x1']) + int(row['x2']) / 2.0
+            y_center = int(row['y1']) + int(row['y2']) / 2.0
+            obj_width = int(row['x2']) - int(row['x1'])
+            obj_height = int(row['y2']) - int(row['y1'])
 
-            x = x_center / row['image_width']
-            y = y_center / row['image_height']
-            w = obj_width / row['image_width']
-            h = obj_height / row['image_height']
+            x = x_center / int(row['image_width'])
+            y = y_center / int(row['image_height'])
+            w = obj_width / int(row['image_width'])
+            h = obj_height / int(row['image_height'])
 
             output_row = f'0 {round(x, 8)} {round(y, 8)} {round(w, 8)} {round(h, 8)}\n'
 
