@@ -133,7 +133,7 @@
           "ImageUri": "799052614850.dkr.ecr.eu-west-1.amazonaws.com/jron-aiga-pipeline-preprocessing:latest",
           "ContainerEntrypoint": [
             "python3",
-            "/opt/ml/processing/input/code/resize_images.py"
+            "/opt/ml/processing/input/code/reannotate_images.py"
           ]
         },
         "StoppingCondition": {
