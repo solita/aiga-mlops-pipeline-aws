@@ -1,2 +1,2 @@
-# aws-mlops-pipeline
+# AIGA-MLOps-pipeline-AWS
 MLOps pipeline for the AIGA project.
